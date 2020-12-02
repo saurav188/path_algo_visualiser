@@ -1,0 +1,19 @@
+*{
+    margin: 0px;
+    padding:0px;
+    box-sizing: border-box;
+}
+.maze{
+    display:flex;
+    max-width: 750px;
+    height: 500px;
+    flex-wrap: wrap;
+    margin:50px auto;
+    .grid{
+        margin:0px;
+        padding:0px;
+        border:0.01px solid black;
+        width:25px;
+        height:25px;
+    }
+}
