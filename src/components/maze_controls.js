@@ -1,15 +1,32 @@
 import '../css/maze_control.css'
+import A_star from '../algorithms/A_star'
 
 function Maze_control(){
     var no_rows=21;
     var no_columns=31;
-    function choose_eraser(event){
+    function choose_eraser(){
         document.getElementById('eraser').checked = true;
         document.getElementById('drawer').checked = false;
+        document.getElementById('start').checked = false;
+        document.getElementById('target').checked = false;
     };
-    function choose_drawer(event){
+    function choose_drawer(){
         document.getElementById('eraser').checked = false;
         document.getElementById('drawer').checked = true;
+        document.getElementById('start').checked = false;
+        document.getElementById('target').checked = false;
+    };
+    function choose_start(){
+        document.getElementById('start').checked = true;
+        document.getElementById('target').checked = false;
+        document.getElementById('eraser').checked = false;
+        document.getElementById('drawer').checked = false;
+    };
+    function choose_target(){
+        document.getElementById('start').checked = false;
+        document.getElementById('target').checked = true;
+        document.getElementById('eraser').checked = false;
+        document.getElementById('drawer').checked = false;
     };
     function getRandomInt(min, max) {
         if(min===max){return min}
@@ -99,6 +116,13 @@ function Maze_control(){
             <select id='algorithm'>
                 <option value='A* algorithm'>A* algorithm</option>
             </select>
+            <div className="algo-btns">
+                <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
+                <lable for="eraser">start</lable><br></br>
+                <input type="checkbox" id="target" class="checkbox" onClick={choose_target}></input>
+                <lable for="drawer">target</lable><br></br>
+                <button id ="find-path-btn" onClick={()=>A_star()}>Find path</button>
+            </div>
             <h4 className="maze-building-title">Maze building tools</h4>
             <hr></hr>
             <input type="checkbox" id="eraser" class="checkbox" onClick={choose_eraser}></input>

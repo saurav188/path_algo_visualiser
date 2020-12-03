@@ -29,7 +29,19 @@
   background-color: black;
 }
 
-.maze .found {
+.maze .start {
+  background-color: green;
+}
+
+.maze .target {
   background-color: red;
+}
+
+.maze .seen {
+  background-color: yellow;
+}
+
+.maze .path {
+  background-color: blue;
 }
 /*# sourceMappingURL=maze.css.map */
