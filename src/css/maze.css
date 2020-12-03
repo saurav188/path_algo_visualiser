@@ -9,11 +9,12 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  max-width: 750px;
-  height: 500px;
+  max-width: 785px;
+  height: 535px;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
   margin: 50px auto;
+  border: 5px solid black;
 }
 
 .maze .grid {
@@ -22,5 +23,13 @@
   border: 0.01px solid black;
   width: 25px;
   height: 25px;
+}
+
+.maze .obstacle {
+  background-color: black;
+}
+
+.maze .found {
+  background-color: red;
 }
 /*# sourceMappingURL=maze.css.map */

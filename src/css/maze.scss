@@ -5,15 +5,22 @@
 }
 .maze{
     display:flex;
-    max-width: 750px;
-    height: 500px;
+    max-width: 785px;
+    height: 535px;
     flex-wrap: wrap;
     margin:50px auto;
+    border: 5px solid black;
     .grid{
         margin:0px;
         padding:0px;
         border:0.01px solid black;
         width:25px;
         height:25px;
+    }
+    .obstacle{
+        background-color: black;
+    }
+    .found{
+        background-color: red;
     }
 }
