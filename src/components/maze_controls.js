@@ -1,5 +1,6 @@
 import '../css/maze_control.css'
 import A_star from '../algorithms/A_star'
+import BFS from '../algorithms/BFS'
 
 function Maze_control(){
     var no_rows=21;
@@ -110,18 +111,24 @@ function Maze_control(){
             current=next;
         };
     };
+    function find_path(){
+        var algo=document.getElementById('algorithm').value;
+        if(algo=='A* algorithm'){A_star();return}
+        if(algo=='BFS'){BFS();return}
+    };
     return (
         <div className="maze_control">
             <h4 className="maze-building-title">Algorithm</h4>
             <select id='algorithm'>
                 <option value='A* algorithm'>A* algorithm</option>
+                <option value='BFS'>BFS</option>
             </select>
             <div className="algo-btns">
                 <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
                 <lable for="eraser">start</lable><br></br>
                 <input type="checkbox" id="target" class="checkbox" onClick={choose_target}></input>
                 <lable for="drawer">target</lable><br></br>
-                <button id ="find-path-btn" onClick={()=>A_star()}>Find path</button>
+                <button id ="find-path-btn" onClick={()=>find_path()}>Find path</button>
             </div>
             <h4 className="maze-building-title">Maze building tools</h4>
             <hr></hr>

@@ -26,7 +26,6 @@ function A_star(){
     function get_neighbours(x,y,visited){
         var neighbours=[];
         var index=((y-1)*no_columns)+(x-1)
-        visited[x+','+y]=true;
         //top neighbour
         if(y-1>0 && !grids[index-no_columns].classList.contains('obstacle') && visited[x+','+(y-1)]===undefined){
             neighbours.push([x,(y-1)])
@@ -48,18 +47,24 @@ function A_star(){
     function get_heuristic(current,target){
         return (Math.abs(target[0]-current[0]))+(Math.abs(target[1]-current[1]));
     };
-    function sleep(milliseconds){
-        return new Promise(resolve => setTimeout(resolve, milliseconds))
-    };
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+          currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+      }
     found_target=false;
     var path=[[x,y]];
     var visited={};
     var temp,temp_best,min_dist,neighbours;
+    i=1;
     while(!found_target){
             if(x===target[0] && y==target[1]){found_target=true;continue;};
             neighbours=get_neighbours(x,y,visited);
             if(neighbours.length==0){
                 temp=path.pop();
+                visited[x+','+y]=undefined; 
                 x=temp[0];
                 y=temp[1];
                 continue;
@@ -78,13 +83,14 @@ function A_star(){
             if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
                 grids[((y-1)*no_columns)+(x-1)].classList.add('seen');
             };
+            visited[x+','+y]=true;
             path.push(temp_best);
     };
     path.forEach(each=>{
-        if(!grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('start') && 
-            !grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('target')){
-                grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.add('path')
-        };
+            if(!grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('start') && 
+                !grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('target')){
+                    grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.add('path')
+            };
     });
 };
 
