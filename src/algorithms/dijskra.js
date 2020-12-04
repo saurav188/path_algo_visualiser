@@ -2,9 +2,9 @@ export default function dijsktra(){
     var no_rows=21;
     var no_columns=31;
     const grids=Array.from(document.getElementsByClassName('grid'));
-    var x,y;
+    let x,y;
     var found_start=false;
-    var target=[]
+    let target=[]
     var found_target=false;
     var i=0;
     grids.forEach(grid=>{
@@ -58,19 +58,20 @@ export default function dijsktra(){
             j++;
         };
     });
-    var dist={};
+    let dist={};
     active_grids.forEach(each=>{
         dist[each[0]+','+each[1]]=999999;
     });
-    console.log(active_grids.length)
     dist[x+','+y]=0;
     var start=[x,y]
     var parent={};
-    var neighbours,min,current,z,temp;
+    let neighbours,min
+    let current,z,temp;
     var keep_looping=true;
-    while(active_grids.length>0 && keep_looping){
+    var intervalId=null;
+    intervalId=setInterval(()=>{
+        if(active_grids.length<=0 || !keep_looping){clearInterval(intervalId);}
         min=99999;
-        console.log(min);
         for(var i=0;i<active_grids.length;i++){
             temp=dist[active_grids[i][0]+','+active_grids[i][1]]
             if(min>temp){
@@ -95,15 +96,17 @@ export default function dijsktra(){
                 && !grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('target')){
                     grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.add('seen');
             };
-        });
-    };
-    while(!(x===start[0] && y===start[1])){
-        if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
-            !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
-                grids[((y-1)*no_columns)+(x-1)].classList.add('path');
-        };
-        var temp=parent[x+','+y];
-        x=temp[0];
-        y=temp[1];
-    };
+        })
+        if(!keep_looping){
+            while(!(x===start[0] && y===start[1])){
+                if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
+                    !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
+                        grids[((y-1)*no_columns)+(x-1)].classList.add('path');
+                };
+                temp=parent[x+','+y];
+                x=temp[0];
+                y=temp[1];
+            };
+        }
+    }, 100);
 };

@@ -55,28 +55,33 @@ export default function BFS(){
     var parent={};
     var temp,neighbours;
     var queue=[[x,y]];
-    while(queue.length>0 && !found_target){
-        if(x===target[0] && y===target[1]){found_target=true;continue;};
-        temp=queue.pop();
-        x=temp[0];
-        y=temp[1];
-        neighbours=get_neighbours(x,y,visited);
-        neighbours.forEach(neighbour=>{
-            queue.splice(0,0,neighbour);
-            parent[neighbour[0]+','+neighbour[1]]=[x,y]
-        });
-        if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start')
-            && !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
-            grids[((y-1)*no_columns)+(x-1)].classList.add('seen');
+    var intervalId=null;
+    intervalId=setInterval(()=>{
+        if(queue.length<=0 || found_target){clearInterval(intervalId);};
+        if(x===target[0] && y===target[1]){found_target=true;};
+        if(!found_target){
+            temp=queue.pop();
+            x=temp[0];
+            y=temp[1];
+            neighbours=get_neighbours(x,y,visited);
+            neighbours.forEach(neighbour=>{
+                queue.splice(0,0,neighbour);
+                parent[neighbour[0]+','+neighbour[1]]=[x,y]
+            });
+            if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start')
+                && !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
+                grids[((y-1)*no_columns)+(x-1)].classList.add('seen');
+            };
+        }else{
+            while(!(x===start[0] && y===start[1])){
+                if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
+                    !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
+                        grids[((y-1)*no_columns)+(x-1)].classList.add('path');
+                };
+                temp=parent[x+','+y];
+                x=temp[0];
+                y=temp[1];
+            };
         };
-    };
-    while(!(x===start[0] && y===start[1])){
-        if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
-            !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
-                grids[((y-1)*no_columns)+(x-1)].classList.add('path');
-        };
-        temp=parent[x+','+y];
-        x=temp[0];
-        y=temp[1];
-    };
+    },100);
 };

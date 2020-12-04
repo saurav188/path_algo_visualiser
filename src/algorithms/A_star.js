@@ -59,15 +59,18 @@ function A_star(){
     var visited={};
     var temp,temp_best,min_dist,neighbours;
     i=1;
-    while(!found_target){
-            if(x===target[0] && y==target[1]){found_target=true;continue;};
+    var intervalId=null;
+    intervalId=setInterval(()=>{
+        if(found_target){clearInterval(intervalId);}
+        if(x===target[0] && y==target[1]){found_target=true;};
+        if(!found_target){
             neighbours=get_neighbours(x,y,visited);
             if(neighbours.length==0){
                 temp=path.pop();
                 visited[x+','+y]=undefined; 
                 x=temp[0];
                 y=temp[1];
-                continue;
+                return;
             };
             temp_best=[undefined,undefined];
             min_dist=Infinity;
@@ -85,13 +88,15 @@ function A_star(){
             };
             visited[x+','+y]=true;
             path.push(temp_best);
-    };
-    path.forEach(each=>{
-            if(!grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('start') && 
-                !grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('target')){
-                    grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.add('path')
-            };
-    });
+        }else{
+            path.forEach(each=>{
+                    if(!grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('start') && 
+                        !grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('target')){
+                            grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.add('path')
+                    };
+            });
+        }
+    },200);
 };
 
 export default A_star;
