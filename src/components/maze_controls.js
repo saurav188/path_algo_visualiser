@@ -1,6 +1,7 @@
 import '../css/maze_control.css'
 import A_star from '../algorithms/A_star'
 import BFS from '../algorithms/BFS'
+import dijkstra from '../algorithms/dijskra'
 
 function Maze_control(){
     var no_rows=21;
@@ -115,6 +116,7 @@ function Maze_control(){
         var algo=document.getElementById('algorithm').value;
         if(algo=='A* algorithm'){A_star();return}
         if(algo=='BFS'){BFS();return}
+        if(algo=='dijkstra'){dijkstra();return}
     };
     return (
         <div className="maze_control">
@@ -122,6 +124,7 @@ function Maze_control(){
             <select id='algorithm'>
                 <option value='A* algorithm'>A* algorithm</option>
                 <option value='BFS'>BFS</option>
+                <option value='dijkstra'>dijkstra</option>
             </select>
             <div className="algo-btns">
                 <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
