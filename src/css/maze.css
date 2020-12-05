@@ -39,9 +39,31 @@
 
 .maze .seen {
   background-color: yellow;
+  -webkit-animation-name: seen_animation;
+          animation-name: seen_animation;
+  -webkit-animation-duration: 2000ms;
+          animation-duration: 2000ms;
 }
 
 .maze .path {
   background-color: blue;
+}
+
+@-webkit-keyframes seen_animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes seen_animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 /*# sourceMappingURL=maze.css.map */

@@ -28,8 +28,14 @@
     }
     .seen{
         background-color: yellow;
+        animation-name: seen_animation;
+        animation-duration: 2000ms;
     }
     .path{
         background-color: blue;
     }
+}
+@keyframes seen_animation{
+    0%{opacity: 0;}
+    100%{opacity: 1;}
 }

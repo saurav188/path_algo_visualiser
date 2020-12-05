@@ -45,7 +45,7 @@ function A_star(){
         return neighbours;
     };
     function get_heuristic(current,target){
-        return (Math.abs(target[0]-current[0]))+(Math.abs(target[1]-current[1]));
+        return  dist[current[0]+','+current[1]]+(Math.abs(target[0]-current[0]))+(Math.abs(target[1]-current[1]));
     };
     function sleep(milliseconds) {
         const date = Date.now();
@@ -55,48 +55,76 @@ function A_star(){
         } while (currentDate - date < milliseconds);
       }
     found_target=false;
-    var path=[[x,y]];
+    var start=[x,y]
+    var open=[[x,y]];
     var visited={};
-    var temp,temp_best,min_dist,neighbours;
+    var j=1;
+    var k=1;
+    var active_grids=[];
+    grids.forEach(grid=>{
+        if(!grid.classList.contains('obstacle')){
+            active_grids.push([j,k]);
+        };
+        if(j===no_columns){
+            k++;
+            j=1;
+        }else{
+            j++;
+        };
+    });
+    let dist={};
+    let parent={}
+    active_grids.forEach(each=>{
+        dist[each[0]+','+each[1]]=999999;
+    });
+    dist[x+','+y]=0;
+    var neighbours,winner,current,temp;
     i=1;
     var intervalId=null;
     intervalId=setInterval(()=>{
-        if(found_target){clearInterval(intervalId);}
-        if(x===target[0] && y==target[1]){found_target=true;};
+        if(open.length<=0||found_target){clearInterval(intervalId);}
         if(!found_target){
-            neighbours=get_neighbours(x,y,visited);
-            if(neighbours.length==0){
-                temp=path.pop();
-                visited[x+','+y]=undefined; 
-                x=temp[0];
-                y=temp[1];
-                return;
+            winner=0;
+            for(var i=0;i<open.length;i++){
+                if(get_heuristic(open[i],target)<get_heuristic(open[winner],target)){
+                    winner=i;
+                };
             };
-            temp_best=[undefined,undefined];
-            min_dist=Infinity;
-            neighbours.forEach(each=>{
-                temp=get_heuristic(each,target);
-                if(temp<min_dist){
-                    min_dist=temp;
-                    temp_best=each;
+            current=open[winner];
+            if(current[0]===target[0] && current[1]==target[1]){
+                found_target=true;
+                x=current[0];
+                y=current[1];
+                return
+            };
+            open.splice(winner,1);
+            visited[current[0]+','+current[1]]=true;
+            neighbours=get_neighbours(current[0],current[1],visited);
+            neighbours.forEach(neighbour=>{
+                if(dist[current[0]+','+current[1]]+1<dist[neighbour[0]+','+neighbour[1]]){
+                    dist[neighbour[0]+','+neighbour[1]]=dist[current[0]+','+current[1]]+1;
+                    parent[neighbour[0]+','+neighbour[1]]=[current[0],current[1]];
+                    if(!(neighbour in open)){
+                        open.push(neighbour)
+                    };
+                    if(!grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('start')
+                        && !grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('target')){
+                            grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.add('seen');
+                    };
                 };
             });
-            x=temp_best[0];
-            y=temp_best[1];
-            if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
-                grids[((y-1)*no_columns)+(x-1)].classList.add('seen');
-            };
-            visited[x+','+y]=true;
-            path.push(temp_best);
         }else{
-            path.forEach(each=>{
-                    if(!grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('start') && 
-                        !grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.contains('target')){
-                            grids[((each[1]-1)*no_columns)+(each[0]-1)].classList.add('path')
-                    };
-            });
+            while(!(x===start[0] && y===start[1])){
+            if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
+                !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){
+                    grids[((y-1)*no_columns)+(x-1)].classList.add('path');
+            };
+            temp=parent[x+','+y];
+            x=temp[0];
+            y=temp[1];
+        };
         }
-    },200);
+    },100);
 };
 
 export default A_star;
