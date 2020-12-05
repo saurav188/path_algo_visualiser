@@ -66,11 +66,7 @@ function Maze_control(){
     };
     function maze_generator(e){
         const grids=Array.from(document.getElementsByClassName('grid'));
-        grids.forEach(each=>{
-            if(each.classList.contains('obstacle')){
-                each.classList.remove('obstacle');
-            };
-        });
+        refresh();
         for(var i=0;i<grids.length;i++){
             var y=Math.floor(i/no_columns)+1;
             var x=(i%no_columns)+1;
@@ -112,6 +108,26 @@ function Maze_control(){
             current=next;
         };
     };
+    function refresh(){
+        const grids=Array.from(document.getElementsByClassName('grid'));
+        grids.forEach(each=>{
+            if(each.classList.contains('obstacle')){
+                each.classList.remove('obstacle');
+            };
+            if(each.classList.contains('seen')){
+                each.classList.remove('seen');
+            };
+            if(each.classList.contains('path')){
+                each.classList.remove('path');
+            };
+            if(each.classList.contains('start')){
+                each.classList.remove('start');
+            };
+            if(each.classList.contains('target')){
+                each.classList.remove('target');
+            };
+        });
+    };
     function find_path(){
         var algo=document.getElementById('algorithm').value;
         if(algo=='A* algorithm'){A_star();return}
@@ -120,12 +136,14 @@ function Maze_control(){
     };
     return (
         <div className="maze_control">
+            <button onClick={()=>refresh()}>refresh the maze</button><br></br>
             <h4 className="maze-building-title">Algorithm</h4>
             <select id='algorithm'>
                 <option value='A* algorithm'>A* algorithm</option>
                 <option value='BFS'>BFS</option>
                 <option value='dijkstra'>dijkstra</option>
             </select>
+            <br></br>
             <div className="algo-btns">
                 <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
                 <lable for="eraser">start</lable><br></br>
