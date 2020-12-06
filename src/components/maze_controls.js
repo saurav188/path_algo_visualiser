@@ -146,9 +146,9 @@ function Maze_control(){
             <br></br>
             <div className="algo-btns">
                 <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
-                <lable for="eraser">start</lable><br></br>
+                <lable for="eraser"> start</lable><br></br>
                 <input type="checkbox" id="target" class="checkbox" onClick={choose_target}></input>
-                <lable for="drawer">target</lable><br></br>
+                <lable for="drawer"> target</lable><br></br>
                 <button id ="find-path-btn" onClick={()=>find_path()}>Find path</button>
             </div>
             <h4 className="maze-building-title">Maze building tools</h4>
