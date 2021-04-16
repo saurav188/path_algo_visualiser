@@ -1,6 +1,4 @@
-export default function BFS(){
-    var no_rows=21;
-    var no_columns=31;
+export default function BFS(no_rows,no_columns){
     const grids=Array.from(document.getElementsByClassName('grid'));
     var x,y;
     var found_start=false;
@@ -57,6 +55,10 @@ export default function BFS(){
     var queue=[[x,y]];
     var intervalId=null;
     intervalId=setInterval(()=>{
+        if(document.getElementById("maze_control_varaible_continue_searching").innerHTML=="false"){
+            clearInterval(intervalId);
+            return;
+        };
         if(queue.length<=0 || found_target){clearInterval(intervalId);};
         if(x===target[0] && y===target[1]){found_target=true;};
         if(!found_target){
@@ -83,5 +85,5 @@ export default function BFS(){
                 y=temp[1];
             };
         };
-    },100);
+    },25);
 };

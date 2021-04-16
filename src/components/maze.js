@@ -2,8 +2,10 @@ import '../css/maze.css'
 import React, { useState } from 'react';
 
 function Maze() {
-    var no_rows=21;
-    var no_columns=31;
+    var maze_width=window.innerWidth-10;
+    var maze_height=(0.8*window.innerHeight)-10;
+    var no_rows=Math.floor(maze_height/(25+(2*0.01)));
+    var no_columns=Math.floor(maze_width/(25+(2*0.01)));
     var only_click=false;
     var rows=new Array(no_rows).fill(true);
     var columns=new Array(no_columns).fill(true);
@@ -35,14 +37,22 @@ function Maze() {
         only_click=false;
     };
     return (
-        <div className="maze">
+        <div className="maze" style={{
+            maxWidth:{maze_width}+"px",
+            minWidth:{maze_width}+"px",
+            maxHeight:{maze_height}+"px",
+            minHeight:{maze_height}+"px"
+        }}>
            {rows.map(()=>
-                columns.map(()=>
-                    <div className='grid' 
-                        onClick={event=>{change_clicked(!clicked);only_click=true;build_maze(event);}} 
-                        onMouseOver={event=>{if(clicked){build_maze(event)}}}>
-                    </div>
-                )
+                <div className="maze_row">
+                    {columns.map(()=>
+                        <div className='grid' 
+                            onClick={event=>{change_clicked(!clicked);only_click=true;build_maze(event);}} 
+                            onMouseOver={event=>{if(clicked){build_maze(event)}}}>
+                        </div>
+
+                    )}
+                </div>
             )}
         </div>
     );

@@ -1,25 +1,114 @@
 .maze_control {
-  width: 200px;
-  height: 98vh;
-  margin: 1vh 0px;
-  padding: 40px 25px;
+  width: 100vw;
+  height: 20vh;
+  padding: 1vh 2.5vw;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-right: 1px solid gray;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  border-bottom: 1px solid gray;
+}
+
+.maze_control .maze_control_variables {
+  display: none;
+}
+
+.maze_control .genetic_algo_options input[type="number"] {
+  width: 40px;
 }
 
 .maze_control .maze-building-title {
   font-weight: bold;
-  border-bottom: 1px solid lightgray;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  margin: 0px;
+}
+
+.maze_control button {
+  padding: 5px 12px;
+  background-color: #41c2ec;
+  border: none;
+  color: white;
+  font-size: bolder;
+}
+
+.maze_control button:active {
+  outline: none;
+  border: none;
+  background-color: #1d7796;
+}
+
+.maze_control button:focus {
+  outline: none;
+  border: none;
+  -webkit-transition-duration: 200ms;
+          transition-duration: 200ms;
+}
+
+.maze_control .show-btn {
+  width: 0px;
+  height: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+.maze_control #algorithm {
+  background-color: lightblue;
+  border: none;
+  padding: 5px 10px;
+}
+
+.maze_control #algorithm:focus {
+  outline: none;
+  border: none;
+}
+
+.maze_control input[type=number] {
+  background-color: lightblue;
+  border: none;
+  outline: none;
+  padding: 5px 1px;
+}
+
+.maze_control input[type=number]:focus {
+  outline: none;
+  border: none;
+}
+
+.maze_control input[type=number]::-webkit-inner-spin-button {
+  background-color: #33a8cf;
+}
+
+@media screen and (max-width: 685px) {
+  .show-btn {
+    min-width: 45px;
+    min-height: 20px;
+  }
+  .algo_choseing_div, .genetic_algo_options {
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+  }
+  .show_more_options1, .show_more_options2 {
+    position: absolute;
+    top: 2.5%;
+    left: 67.5px;
+    width: 205px;
+    height: 100px;
+    padding: 20px;
+    background-color: lightblue;
+  }
+  .show_more_options2 {
+    left: 272.5px;
+  }
+  .show_more_options2 input[type=number] {
+    background-color: #5fd6fd;
+  }
 }
 /*# sourceMappingURL=maze_control.css.map */

@@ -2,10 +2,17 @@ import '../css/maze_control.css'
 import A_star from '../algorithms/A_star'
 import BFS from '../algorithms/BFS'
 import dijkstra from '../algorithms/dijskra'
+import genetic_algorithm from '../algorithms/Genetic_algorithm'
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import Button from 'react-bootstrap/Button';
 
 function Maze_control(){
-    var no_rows=21;
-    var no_columns=31;
+    var maze_width=window.innerWidth-10;
+    var maze_height=(0.8*window.innerHeight)-10;
+    var no_rows=Math.floor(maze_height/(25+(2*0.01)));
+    var no_columns=Math.floor(maze_width/(25+(2*0.01)));
     function choose_eraser(){
         document.getElementById('eraser').checked = true;
         document.getElementById('drawer').checked = false;
@@ -120,44 +127,100 @@ function Maze_control(){
             if(each.classList.contains('path')){
                 each.classList.remove('path');
             };
-            if(each.classList.contains('start')){
-                each.classList.remove('start');
-            };
-            if(each.classList.contains('target')){
-                each.classList.remove('target');
-            };
+            // if(each.classList.contains('start')){
+            //     each.classList.remove('start');
+            // };
+            // if(each.classList.contains('target')){
+            //     each.classList.remove('target');
+            // };
         });
     };
-    function find_path(){
-        var algo=document.getElementById('algorithm').value;
-        if(algo=='A* algorithm'){A_star();return}
-        if(algo=='BFS'){BFS();return}
-        if(algo=='dijkstra'){dijkstra();return}
+    function stop_refresh(){
+        set_countinue_serching(continue_seaching=="true"?continue_seaching="false":continue_seaching="true");
+        const grids=Array.from(document.getElementsByClassName('grid'));
+        grids.forEach(each=>{
+            //if(each.classList.contains('obstacle')){
+            //    each.classList.remove('obstacle');
+            //};
+            if(each.classList.contains('seen')){
+                each.classList.remove('seen');
+            };
+            if(each.classList.contains('path')){
+                each.classList.remove('path');
+            };
+            each.innerHTML="";
+            //if(each.classList.contains('start')){
+            //    each.classList.remove('start');
+            //};
+            //if(each.classList.contains('target')){
+            //    each.classList.remove('target');
+            //};
+        });
     };
+    var [continue_seaching,set_countinue_serching]=useState("false");
+    function find_path(){
+        set_countinue_serching(continue_seaching="true");
+        var algo=document.getElementById('algorithm').value;
+        if(algo=='Genetic Algorithm'){genetic_algorithm(no_rows,no_columns);return}
+        if(algo=='A* algorithm'){A_star(no_rows,no_columns);return}
+        if(algo=='BFS'){BFS(no_rows,no_columns);return}
+        if(algo=='dijkstra'){dijkstra(no_rows,no_columns);return}
+    };
+    function show_more_options(){
+        var algo_choosing_div=document.querySelector(".algo_choseing_div");
+        var genetic_algo_options=document.querySelector(".genetic_algo_options");
+        var show_btn=document.querySelector('#show_btn');
+        if(show_btn.innerHTML=="X"){
+            algo_choosing_div.classList.remove("show_more_options1");
+            genetic_algo_options.classList.remove("show_more_options2");
+            show_btn.innerHTML="More"
+        }
+        else{
+            algo_choosing_div.classList.add("show_more_options1");
+            genetic_algo_options.classList.add("show_more_options2");
+            show_btn.innerHTML="X";
+        };
+        return
+    }
     return (
         <div className="maze_control">
-            <button onClick={()=>refresh()}>refresh the maze</button><br></br>
-            <h4 className="maze-building-title">Algorithm</h4>
-            <select id='algorithm'>
-                <option value='A* algorithm'>A* algorithm</option>
-                <option value='BFS'>BFS</option>
-                <option value='dijkstra'>dijkstra</option>
-            </select>
+            <div class="maze_control_variables">
+                <div id="maze_control_varaible_continue_searching">{continue_seaching}</div>
+            </div>
+            <button class="show-btn" onClick={()=>{show_more_options()}} id="show_btn">More</button>
+            <button onClick={()=>stop_refresh()}> Stop </button><br></br>
+            <div className="algo_choseing_div">
+                <h4 className="maze-building-title">Algorithm:</h4>
+                <select id='algorithm'>
+                    <option value='Genetic Algorithm'>Genetic Algorithm</option>
+                    <option value='A* algorithm'>A* algorithm</option>
+                    <option value='BFS'>BFS</option>
+                    <option value='dijkstra'>dijkstra</option>
+                </select>
+            </div>
+            <br></br>
+            <div className="genetic_algo_options">
+                <label for="genetic_algo_population">Population: </label>
+                <input id="genetic_algo_population" type="number" min="10"></input><br></br><br></br>
+                <label for="genetic_algo_mutation_rate">Mutaion Rate: </label>
+                <input id="genetic_algo_mutation_rate" type="number" min="0"></input><br></br>
+            </div>
             <br></br>
             <div className="algo-btns">
                 <input type="checkbox" id="start" class="checkbox" onClick={choose_start}></input>
-                <lable for="eraser"> start</lable><br></br>
+                <lable for="eraser"> Start</lable><br></br>
                 <input type="checkbox" id="target" class="checkbox" onClick={choose_target}></input>
-                <lable for="drawer"> target</lable><br></br>
+                <lable for="drawer"> Target</lable><br></br>
                 <button id ="find-path-btn" onClick={()=>find_path()}>Find path</button>
             </div>
-            <h4 className="maze-building-title">Maze building tools</h4>
-            <hr></hr>
-            <input type="checkbox" id="eraser" class="checkbox" onClick={choose_eraser}></input>
-            <lable for="eraser">eraser</lable>
-            <input type="checkbox" id="drawer" class="checkbox" onClick={choose_drawer}></input>
-            <lable for="drawer">drawer</lable>
-            <button class="btn generate-maze" onClick={e=>maze_generator(e)}>Generate maze</button>
+            <div className="maze_building_options">
+                <h4 className="maze-building-title">Maze building tools:</h4>
+                <input type="checkbox" id="eraser" class="checkbox" onClick={choose_eraser}></input>
+                <lable for="eraser"> Eraser</lable><br></br>
+                <input type="checkbox" id="drawer" class="checkbox" onClick={choose_drawer}></input>
+                <lable for="drawer"> Builder</lable><br></br>
+                <button class="btn generate-maze" onClick={e=>maze_generator(e)}>Generate maze</button>
+            </div>
         </div>
     )
 };

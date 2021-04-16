@@ -1,7 +1,6 @@
-function A_star(){
-    var no_rows=21;
-    var no_columns=31;
+function A_star(no_rows,no_columns){
     const grids=Array.from(document.getElementsByClassName('grid'));
+    var tot_grids=grids.length;
     var x,y;
     var found_start=false;
     var target=[]
@@ -82,6 +81,10 @@ function A_star(){
     i=1;
     var intervalId=null;
     intervalId=setInterval(()=>{
+        if(document.getElementById("maze_control_varaible_continue_searching").innerHTML=="false"){
+            clearInterval(intervalId);
+            return;
+        };
         if(open.length<=0||found_target){clearInterval(intervalId);}
         if(!found_target){
             winner=0;
@@ -124,7 +127,7 @@ function A_star(){
             y=temp[1];
         };
         }
-    },100);
+    },25);
 };
 
 export default A_star;

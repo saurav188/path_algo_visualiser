@@ -1,25 +1,7 @@
 .App{
     display: flex;
-    .alert{
-        opacity: 0;
-        width: 0px;
-        height: 0px;
-        background-color: red;
-        overflow: hidden;
-    }
+    flex-direction: column;
 }
-
-@media screen and (max-width:1000px){
-    body{
-        overflow: hidden;
-    }
-    .App{
-        .alert{
-            position: absolute;
-            opacity: 0.9;
-            width: 100vw;
-            height: 100vh;
-            background-color: gray;
-        }
-    }
+body{
+    background-color: rgb(214, 238, 247);
 }

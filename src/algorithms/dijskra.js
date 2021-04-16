@@ -1,6 +1,4 @@
-export default function dijsktra(){
-    var no_rows=21;
-    var no_columns=31;
+export default function dijsktra(no_rows,no_columns){
     const grids=Array.from(document.getElementsByClassName('grid'));
     let x,y;
     var found_start=false;
@@ -70,6 +68,10 @@ export default function dijsktra(){
     var keep_looping=true;
     var intervalId=null;
     intervalId=setInterval(()=>{
+        if(document.getElementById("maze_control_varaible_continue_searching").innerHTML=="false"){
+            clearInterval(intervalId);
+            return;
+        };
         if(active_grids.length<=0 || !keep_looping){clearInterval(intervalId);}
         min=99999;
         for(var i=0;i<active_grids.length;i++){
@@ -95,6 +97,7 @@ export default function dijsktra(){
             if(!grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('start')
                 && !grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('target')){
                     grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.add('seen');
+                    grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].innerHTML=dist[neighbour[0]+","+neighbour[1]]
             };
         })
         if(!keep_looping){
@@ -108,5 +111,5 @@ export default function dijsktra(){
                 y=temp[1];
             };
         }
-    }, 100);
+    }, 25);
 };
