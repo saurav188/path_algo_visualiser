@@ -3,7 +3,7 @@ import A_star from '../algorithms/A_star'
 import BFS from '../algorithms/BFS'
 import dijkstra from '../algorithms/dijskra'
 import genetic_algorithm from '../algorithms/Genetic_algorithm'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Button from 'react-bootstrap/Button';
@@ -84,9 +84,10 @@ function Maze_control(){
         var stack=[[1,1]];
         var visited={}
         var current=[1,1]
-        while(stack.length>0){
+        var intervarId=setInterval(()=>{
+            if(stack.length<=0){clearInterval(intervarId)}
             var next=get_next(current,visited);
-            if(next===0){current=stack.pop();continue};
+            if(next===0){current=stack.pop();return};
             var index=(((current[1]-1)*no_columns)+(current[0]-1))
             //if current and next is in same row
             if(current[1]===next[1]){
@@ -110,10 +111,9 @@ function Maze_control(){
                     grids[index+no_columns].classList.remove('obstacle')
                 };
             };
-            setTimeout(500)
             stack.push(next);
             current=next;
-        };
+        },7.5);
     };
     function refresh(){
         const grids=Array.from(document.getElementsByClassName('grid'));
@@ -182,6 +182,10 @@ function Maze_control(){
         };
         return
     }
+    useEffect(()=>{
+        document.getElementById("genetic_algo_population").value=100;
+        document.getElementById("genetic_algo_mutation_rate").value=10;
+    },[]);
     return (
         <div className="maze_control">
             <div class="maze_control_variables">

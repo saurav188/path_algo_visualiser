@@ -1,5 +1,5 @@
 import '../css/maze.css'
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 function Maze() {
     var maze_width=window.innerWidth-10;
@@ -36,6 +36,12 @@ function Maze() {
         };
         only_click=false;
     };
+    useEffect(()=>{
+            const grids=Array.from(document.querySelectorAll(".grid"));
+            grids[0].classList.add("start");
+            grids[grids.length-1].classList.add("target");
+    },[]);
+    
     return (
         <div className="maze" style={{
             maxWidth:{maze_width}+"px",
