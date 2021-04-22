@@ -4,9 +4,6 @@ import BFS from '../algorithms/BFS'
 import dijkstra from '../algorithms/dijskra'
 import genetic_algorithm from '../algorithms/Genetic_algorithm'
 import { useState,useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import Button from 'react-bootstrap/Button';
 
 function Maze_control(){
     var maze_width=window.innerWidth-10;
@@ -71,6 +68,10 @@ function Maze_control(){
         var result=neighbours[getRandomInt(1,no_neighbours)-1]
         return result
     };
+    function check_for_obstacle_in_target(){
+        var target=Array.from(document.getElementsByClassName("target"))[0];
+        target.classList.remove("obstacle");
+    }
     function maze_generator(e){
         const grids=Array.from(document.getElementsByClassName('grid'));
         refresh();
@@ -114,6 +115,7 @@ function Maze_control(){
             stack.push(next);
             current=next;
         },7.5);
+        check_for_obstacle_in_target();
     };
     function refresh(){
         const grids=Array.from(document.getElementsByClassName('grid'));
@@ -159,6 +161,7 @@ function Maze_control(){
     };
     var [continue_seaching,set_countinue_serching]=useState("false");
     function find_path(){
+        stop_refresh();
         set_countinue_serching(continue_seaching="true");
         var algo=document.getElementById('algorithm').value;
         if(algo=='Genetic Algorithm'){genetic_algorithm(no_rows,no_columns);return}

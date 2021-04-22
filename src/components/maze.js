@@ -10,6 +10,10 @@ function Maze() {
     var rows=new Array(no_rows).fill(true);
     var columns=new Array(no_columns).fill(true);
     const [clicked,change_clicked]=useState(false);
+    function check_for_obstacle_in_target(){
+        var target=Array.from(document.getElementsByClassName("target"))[0];
+        target.classList.remove("obstacle");
+    }
     function build_maze(event){
         if(document.getElementById('drawer').checked === true){
             event.target.classList.add('obstacle')
@@ -35,6 +39,7 @@ function Maze() {
             event.target.classList.add('target');
         };
         only_click=false;
+        check_for_obstacle_in_target();
     };
     useEffect(()=>{
             const grids=Array.from(document.querySelectorAll(".grid"));
