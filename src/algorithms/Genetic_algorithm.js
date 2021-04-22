@@ -1,5 +1,3 @@
-import A_star from "./A_star";
-
 export default function genetic_algorithm(no_rows,no_columns){
     const grids=Array.from(document.getElementsByClassName('grid'));
     var x,y;
