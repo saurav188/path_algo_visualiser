@@ -1,11 +1,17 @@
 import '../css/maze.css'
 import React, { useState,useEffect } from 'react';
 
-function Maze() {
-    var maze_width=window.innerWidth-10;
-    var maze_height=(0.8*window.innerHeight)-10;
-    var no_rows=Math.floor(maze_height/(25+(2*0.01)));
-    var no_columns=Math.floor(maze_width/(25+(2*0.01)));
+//Component: maze
+//
+//includes:
+//  onbstacles building function
+//  actual maze
+
+function Maze(props) {
+    var maze_width=props.width;
+    var maze_height=props.height;
+    var no_rows=props.rows;
+    var no_columns=props.columns;
     var only_click=false;
     var rows=new Array(no_rows).fill(true);
     var columns=new Array(no_columns).fill(true);
@@ -14,6 +20,7 @@ function Maze() {
         var target=Array.from(document.getElementsByClassName("target"))[0];
         target.classList.remove("obstacle");
     }
+    //obstacle_building_function
     function build_maze(event){
         if(document.getElementById('drawer').checked === true){
             event.target.classList.add('obstacle')
@@ -41,6 +48,7 @@ function Maze() {
         only_click=false;
         check_for_obstacle_in_target();
     };
+    //adding start and target grid at the beginning
     useEffect(()=>{
             const grids=Array.from(document.querySelectorAll(".grid"));
             grids[0].classList.add("start");

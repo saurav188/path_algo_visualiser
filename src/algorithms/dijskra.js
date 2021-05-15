@@ -5,6 +5,7 @@ export default function dijsktra(no_rows,no_columns){
     let target=[]
     var found_target=false;
     var i=0;
+    //finds start and target grid
     grids.forEach(grid=>{
         if(grid.classList.contains('start')){
             y=Math.floor(i/no_columns)+1;
@@ -17,10 +18,13 @@ export default function dijsktra(no_rows,no_columns){
         };
         i++;
     });
+    //checks if start and target grid is selected
     if(!found_start || !found_target){
         alert('choose target and start grid');
         return
     };
+    //gets all the non active ,non visited neighbours
+    //gets all the non active ,non visited neighbours
     function get_neighbours(x,y){
         var neighbours=[];
         var index=((y-1)*no_columns)+(x-1);
@@ -45,6 +49,7 @@ export default function dijsktra(no_rows,no_columns){
     var j=1;
     var k=1;
     var active_grids=[]
+    //puts all the active grid to the array gids
     grids.forEach(grid=>{
         if(!grid.classList.contains('obstacle')){
             active_grids.push([j,k]);
@@ -57,9 +62,11 @@ export default function dijsktra(no_rows,no_columns){
         };
     });
     let dist={};
+    //dist from start of all the grids is infinity 
     active_grids.forEach(each=>{
         dist[each[0]+','+each[1]]=999999;
     });
+    //dist of start from start is 0
     dist[x+','+y]=0;
     var start=[x,y]
     var parent={};
@@ -69,6 +76,7 @@ export default function dijsktra(no_rows,no_columns){
     var intervalId=null;
     intervalId=setInterval(()=>{
         if(document.getElementById("maze_control_varaible_continue_searching").innerHTML=="false"){
+            //stops the algorithm if stop btn is clicked
             clearInterval(intervalId);
             return;
         };
@@ -82,25 +90,29 @@ export default function dijsktra(no_rows,no_columns){
             };
         };
         current=active_grids[z];
+        //removes current form active_grids
         active_grids.splice(z,1);
         neighbours=get_neighbours(current[0],current[1]);
         neighbours.forEach(neighbour=>{
+            //adds best parent to the neighbour
             if(dist[current[0]+','+current[1]]+1<dist[neighbour[0]+','+neighbour[1]]){
                 dist[neighbour[0]+','+neighbour[1]]=dist[current[0]+','+current[1]]+1;
                 parent[neighbour[0]+','+neighbour[1]]=[current[0],current[1]]
-            };
+            }
+            //checks if the the target is reached
             if(neighbour[0]===target[0] && neighbour[1]===target[1]){
                 x=neighbour[0];
                 y=neighbour[1];
                 keep_looping=false
             };
+            //shows the grid is visited
             if(!grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('start')
                 && !grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.contains('target')){
                     grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].classList.add('seen');
                     grids[((neighbour[1]-1)*no_columns)+(neighbour[0]-1)].innerHTML=dist[neighbour[0]+","+neighbour[1]]
             };
         })
-        if(!keep_looping){
+        if(!keep_looping){//display the final path 
             while(!(x===start[0] && y===start[1])){
                 if(!grids[((y-1)*no_columns)+(x-1)].classList.contains('start') && 
                     !grids[((y-1)*no_columns)+(x-1)].classList.contains('target')){

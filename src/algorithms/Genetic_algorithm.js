@@ -5,6 +5,7 @@ export default function genetic_algorithm(no_rows,no_columns){
     var target=[]
     var found_target=false;
     var i=0;
+    //finds start and target
     grids.forEach(grid=>{
         if(grid.classList.contains('start')){
             y=Math.floor(i/no_columns)+1;
@@ -17,10 +18,12 @@ export default function genetic_algorithm(no_rows,no_columns){
         };
         i++;
     });
+    //checks if start and target is found
     if(!found_start || !found_target){
         alert('choose target and start grid');
         return
     };
+    //gets all the valid, non-visited neighbours
     function get_neighbours(x,y,visited){
         var neighbours=[];
         var index=((y-1)*no_columns)+(x-1);
@@ -47,17 +50,11 @@ export default function genetic_algorithm(no_rows,no_columns){
         };
         return neighbours;
     };
+    //random no x => min<=x<max
     function getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min) ) + min;
     };
-    function dist(point1,point2){
-        var result=(((point2[0]-point1[0])^2)+((point2[1]-point1[1])^2))^(1/2);
-        if (result===0){
-            return 1;
-        }else{
-            return result;
-        };
-    };
+    //removes the current path
     function refresh(){
         const grids=Array.from(document.getElementsByClassName('grid'));
         grids.forEach(each=>{
@@ -66,6 +63,7 @@ export default function genetic_algorithm(no_rows,no_columns){
             };
         });
     };
+    //dispalys the given path
     function display(max_fitness_path){
         refresh();
         max_fitness_path.forEach(each=>{
@@ -75,11 +73,14 @@ export default function genetic_algorithm(no_rows,no_columns){
             };
         });
     }
+    //path class
     class path {
+        //initialpath setup
         constructor(start,target){
             var temp_path=[];
             var temp=start;
             var temp_visited={};
+            //builds a path
             while(temp[0]!=target[0] || temp[1]!=target[1]){
                 var temp_neighbours=get_neighbours(temp[0],temp[1],temp_visited);
                 if(temp_neighbours.length===0){break};
@@ -88,6 +89,7 @@ export default function genetic_algorithm(no_rows,no_columns){
                 temp_path.push(temp_next);
                 temp=temp_next;
             };
+            //adds fitness
             var temp_fitness=25000;
             if(temp[0]!==target[0] || temp[1]!==target[1]){temp_fitness=1000}
             temp_fitness=temp_fitness/(temp_path.length^2);
@@ -95,15 +97,19 @@ export default function genetic_algorithm(no_rows,no_columns){
             this.fitness=Math.abs(temp_fitness);
         };
     };
+    //gets a random parent from the given generation according to probability
     function get_parent_according_to_prob(current_generation){
         var i=Math.random()
         var index=0
+        //if probability of path i is 0.5 then it has 50% chance of chooseing
+        //because if i<0.5 then it is choosen and chance of i<0.5 is 50%
         while(i>0){
             i-=current_generation[index].prob;
             index++;
         };
         return current_generation[index-1]
     };
+    //gives fitness of the path with respect to the target
     function get_fitness(path,target){
         var temp_fitness=250000;
         var temp=path[path.length-1]
@@ -111,75 +117,7 @@ export default function genetic_algorithm(no_rows,no_columns){
         temp_fitness=temp_fitness/(path.length^2);
         return Math.abs(temp_fitness);
     };
-    function crossover(parent1,parent2,start,target){
-        var parent1_visited={};
-        var parent2_visited={};
-        var i=0;
-        var j=0;
-        var resulting_path=[];
-        var prev_i=0;
-        var prev_j=0;
-        var path1=parent1.path;
-        var path2=parent2.path;
-        var target_reached=false;
-        while(i<path1.length && j<path2.length){
-            parent1_visited[path1[i][0]+','+path1[i][1]]=i;
-            parent2_visited[path2[j][0]+','+path2[j][1]]=j;
-            if(parent1_visited[path2[j][0]+','+path2[j][1]]!==undefined){
-                resulting_path=resulting_path.concat(path1.slice(prev_i,parent1_visited[path2[j][0]+','+path2[j][1]]+1));
-                prev_i=parent1_visited[path2[j][0]+','+path2[j][1]]+1;
-                parent1_visited[path2[j][0]+','+path2[j][1]]=undefined;
-                prev_j=j+1;
-                i=prev_i;
-                j=prev_j;
-                if(j<path2.length){
-                    if(path2[j][0]===target[0] && path2[j][1]===target[1]){
-                        target_reached=true;
-                        break;
-                    };
-                };
-            }
-            else if(parent2_visited[path1[i][0]+','+path1[i][1]]!==undefined){
-                resulting_path=resulting_path.concat(path2.slice(prev_j,parent2_visited[path1[i][0]+','+path1[i][1]]+1));
-                prev_j=parent2_visited[path1[i][0]+','+path1[i][1]]+1;
-                parent2_visited[path1[i][0]+','+path1[i][1]]=undefined;
-                prev_i=i+1;
-                i=prev_i;
-                j=prev_j;
-                if(i<path1.length){
-                    if(path1[i][0]===target[0] && path1[i][1]===target[1]){
-                        target_reached=true;
-                        break;
-                    };
-                };
-            }
-            else if(path1[i][0]===target[0] && path1[i][1]===target[1]){
-                resulting_path=resulting_path.concat(path1.slice(prev_i,i+1));
-                target_reached=true;
-                break;
-            }
-            else if(path2[j][0]===target[0] && path2[j][1]===target[1]){
-                resulting_path=resulting_path.concat(path2.slice(prev_j,j+1));                
-                target_reached=true;
-                break;
-            }
-            else{
-                i+=1;
-                j+=1;
-            };
-        };
-        if(!target_reached){
-            if(i<path1.length){
-                resulting_path=resulting_path.concat(path1.slice(i,path1.length))
-            }else if(j<path2.length){
-                resulting_path=resulting_path.concat(path2.slice(j,path2.length))
-            };
-        };
-        var temp_child=new path(start,target)
-        temp_child.path=resulting_path;
-        temp_child.fitness=get_fitness(resulting_path,target);
-        return temp_child
-    };
+    //does crossover between to path gives a child path of these to path
     function crossover2(parent1,parent2,start,target){
         var parent1_visited={};
         var parent2_visited={};
@@ -190,14 +128,19 @@ export default function genetic_algorithm(no_rows,no_columns){
         var path2=parent2.path;
         var both_reaches_target,parent1_reaches_target,parent2_reaches_target;
         var crossover_complete=false;
+        //run the look until both paths grid can be read
         while(i<path1.length && j<path2.length){
+            //save the index of the grids visited
             parent1_visited[path1[i][0]+','+path1[i][1]]=i;
             parent2_visited[path2[j][0]+','+path2[j][1]]=j;
+            //if the current path2 grid is already visited by path1
+            //the path till that grid is small for path1
             if(parent1_visited[path2[j][0]+','+path2[j][1]]!==undefined){
                 resulting_path=resulting_path.concat(path1.slice(0,parent1_visited[path2[j][0]+','+path2[j][1]]+1));
                 parent1_reaches_target=path1[path1.length-1][0]===target[0] && path1[path1.length-1][1]===target[1];
                 parent2_reaches_target=path2[path2.length-1][0]===target[0] && path2[path2.length-1][1]===target[1];
                 both_reaches_target=parent1_reaches_target && parent2_reaches_target;
+                //if both reaches target 
                 if(both_reaches_target){
                     if((path1.length-parent1_visited[path2[j][0]+','+path2[j][1]])<(path2.length-j)){
                         resulting_path=resulting_path.concat(path1.slice(parent1_visited[path2[j][0]+','+path2[j][1]]+1,path1.length))
@@ -264,6 +207,7 @@ export default function genetic_algorithm(no_rows,no_columns){
         temp_child.fitness=get_fitness(resulting_path,target)
         return temp_child
     };
+    //mutates the given path
     function mutate(child,mutation_rate,start,target){
         var random_no=Math.random();
         if((random_no*100)-mutation_rate<0){

@@ -5,11 +5,17 @@ import dijkstra from '../algorithms/dijskra'
 import genetic_algorithm from '../algorithms/Genetic_algorithm'
 import { useState,useEffect } from 'react';
 
-function Maze_control(){
-    var maze_width=window.innerWidth-10;
-    var maze_height=(0.8*window.innerHeight)-10;
-    var no_rows=Math.floor(maze_height/(25+(2*0.01)));
-    var no_columns=Math.floor(maze_width/(25+(2*0.01)));
+
+// Component: maze controls
+// include:
+//   chooses maze building tools
+//   maze generating algo
+//   all other controls
+
+function Maze_control(props){
+    // uses the windows width and height to find no_rows and no_columns
+    var no_rows=props.rows;
+    var no_columns=props.columns;
     function choose_eraser(){
         document.getElementById('eraser').checked = true;
         document.getElementById('drawer').checked = false;
@@ -34,12 +40,14 @@ function Maze_control(){
         document.getElementById('eraser').checked = false;
         document.getElementById('drawer').checked = false;
     };
+    // gets random interger in [min,max)
     function getRandomInt(min, max) {
         if(min===max){return min}
         var min = Math.ceil(min);
         var max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+    //gives a random neighbour of a  grid for maze generating algo
     function get_next(current,visited){
         var neighbours=[];
         var x=current[0]
@@ -68,10 +76,12 @@ function Maze_control(){
         var result=neighbours[getRandomInt(1,no_neighbours)-1]
         return result
     };
+    // removes obstacle class from the target grid
     function check_for_obstacle_in_target(){
         var target=Array.from(document.getElementsByClassName("target"))[0];
         target.classList.remove("obstacle");
     }
+    // maze generating function
     function maze_generator(e){
         const grids=Array.from(document.getElementsByClassName('grid'));
         refresh();
@@ -117,6 +127,7 @@ function Maze_control(){
         },7.5);
         check_for_obstacle_in_target();
     };
+    // clears the maze for maze generation
     function refresh(){
         const grids=Array.from(document.getElementsByClassName('grid'));
         grids.forEach(each=>{
@@ -129,21 +140,13 @@ function Maze_control(){
             if(each.classList.contains('path')){
                 each.classList.remove('path');
             };
-            // if(each.classList.contains('start')){
-            //     each.classList.remove('start');
-            // };
-            // if(each.classList.contains('target')){
-            //     each.classList.remove('target');
-            // };
         });
     };
+    // stops any running algorithm and removes the path found
     function stop_refresh(){
         set_countinue_serching(continue_seaching=="true"?continue_seaching="false":continue_seaching="true");
         const grids=Array.from(document.getElementsByClassName('grid'));
         grids.forEach(each=>{
-            //if(each.classList.contains('obstacle')){
-            //    each.classList.remove('obstacle');
-            //};
             if(each.classList.contains('seen')){
                 each.classList.remove('seen');
             };
@@ -151,17 +154,12 @@ function Maze_control(){
                 each.classList.remove('path');
             };
             each.innerHTML="";
-            //if(each.classList.contains('start')){
-            //    each.classList.remove('start');
-            //};
-            //if(each.classList.contains('target')){
-            //    each.classList.remove('target');
-            //};
         });
     };
     var [continue_seaching,set_countinue_serching]=useState("false");
+    // calls the algorithm choosen by the user
     function find_path(){
-        stop_refresh()
+        stop_refresh();
         set_countinue_serching(continue_seaching="true");
         var algo=document.getElementById('algorithm').value;
         if(algo=='Genetic Algorithm'){genetic_algorithm(no_rows,no_columns);return}
@@ -169,6 +167,7 @@ function Maze_control(){
         if(algo=='BFS'){BFS(no_rows,no_columns);return}
         if(algo=='dijkstra'){dijkstra(no_rows,no_columns);return}
     };
+    // shows more options when in mobile view
     function show_more_options(){
         var algo_choosing_div=document.querySelector(".algo_choseing_div");
         var genetic_algo_options=document.querySelector(".genetic_algo_options");
@@ -185,6 +184,7 @@ function Maze_control(){
         };
         return
     }
+    // adds population and mutation rate for genetic algorithm
     useEffect(()=>{
         document.getElementById("genetic_algo_population").value=100;
         document.getElementById("genetic_algo_mutation_rate").value=10;
@@ -199,8 +199,8 @@ function Maze_control(){
             <div className="algo_choseing_div">
                 <h4 className="maze-building-title">Algorithm:</h4>
                 <select id='algorithm'>
-                    <option value='Genetic Algorithm'>Genetic Algorithm</option>
                     <option value='A* algorithm'>A* algorithm</option>
+                    <option value='Genetic Algorithm'>Genetic Algorithm</option>
                     <option value='BFS'>BFS</option>
                     <option value='dijkstra'>dijkstra</option>
                 </select>
