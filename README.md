@@ -1,5 +1,5 @@
 # path_algo_visualiser
-[link](https://path-algo-visualiser.herokuapp.com/)
+[link]([https://path-algo-visualiser.herokuapp.com/](https://saurav188.github.io/path_algo_visualiser/))
 Algorithms visualized:
   1. Breadth First Search(BFS)
   2. Genetic Algorithm
