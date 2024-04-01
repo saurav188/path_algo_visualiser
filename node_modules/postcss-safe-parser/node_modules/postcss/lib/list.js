@@ -1,26 +1,37 @@
 'use strict'
 
 let list = {
-  split (string, separators, last) {
+  comma(string) {
+    return list.split(string, [','], true)
+  },
+
+  space(string) {
+    let spaces = [' ', '\n', '\t']
+    return list.split(string, spaces)
+  },
+
+  split(string, separators, last) {
     let array = []
     let current = ''
     let split = false
 
     let func = 0
-    let quote = false
+    let inQuote = false
+    let prevQuote = ''
     let escape = false
 
     for (let letter of string) {
-      if (quote) {
-        if (escape) {
-          escape = false
-        } else if (letter === '\\') {
-          escape = true
-        } else if (letter === quote) {
-          quote = false
+      if (escape) {
+        escape = false
+      } else if (letter === '\\') {
+        escape = true
+      } else if (inQuote) {
+        if (letter === prevQuote) {
+          inQuote = false
         }
       } else if (letter === '"' || letter === "'") {
-        quote = letter
+        inQuote = true
+        prevQuote = letter
       } else if (letter === '(') {
         func += 1
       } else if (letter === ')') {
@@ -40,15 +51,6 @@ let list = {
 
     if (last || current !== '') array.push(current.trim())
     return array
-  },
-
-  space (string) {
-    let spaces = [' ', '\n', '\t']
-    return list.split(string, spaces)
-  },
-
-  comma (string) {
-    return list.split(string, [','], true)
   }
 }
 
